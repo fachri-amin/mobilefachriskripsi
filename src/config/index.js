@@ -1,5 +1,5 @@
 const config = {
-	API_URL: 'http://localhost:8000',
+	API_URL: 'https://skripsifachri.herokuapp.com',
 }
 
 export default config

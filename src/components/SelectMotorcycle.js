@@ -3,7 +3,13 @@ import { StyleSheet, View, Text } from 'react-native'
 import { Dropdown } from 'react-native-element-dropdown'
 import { bgColor } from '../constants'
 
-const SelectMotorcycle = ({ label = 'Label', data = [], placeholder = 'Select item', onSelect = () => {} }) => {
+const SelectMotorcycle = ({
+	editMode = false,
+	label = 'Label',
+	data = [],
+	placeholder = 'Select item',
+	onSelect = () => {},
+}) => {
 	const [value, setValue] = useState(null)
 	const [isFocus, setIsFocus] = useState(false)
 	const [motorcycleOptions, setMotorcycleOptions] = useState([])
@@ -47,7 +53,7 @@ const SelectMotorcycle = ({ label = 'Label', data = [], placeholder = 'Select it
 			{renderLabel()}
 			<Dropdown
 				style={[styles.dropdown, isFocus && { borderColor: bgColor.primary }]}
-				placeholderStyle={styles.placeholderStyle}
+				placeholderStyle={[styles.placeholderStyle, editMode && { color: 'black' }]}
 				selectedTextStyle={styles.selectedTextStyle}
 				inputSearchStyle={styles.inputSearchStyle}
 				iconStyle={styles.iconStyle}

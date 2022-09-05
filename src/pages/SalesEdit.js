@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, ActivityIndicator } from 'react-native'
 import * as Yup from 'yup'
 import { useStoreActions } from 'easy-peasy'
 import { bgColor } from '../constants'
@@ -57,6 +57,14 @@ const SalesEdit = ({ navigation, route }) => {
 		}
 	}, [detail])
 
+	if (isLoadingDetail) {
+		return (
+			<View style={{ flex: 1, marginTop: 50 }}>
+				<ActivityIndicator size="large" color={bgColor.secondary} />
+			</View>
+		)
+	}
+
 	return (
 		<DashboardLayout title={'Ubah penjualan'}>
 			<Formik
@@ -68,9 +76,10 @@ const SalesEdit = ({ navigation, route }) => {
 				{({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue, touched, setFieldTouched }) => (
 					<>
 						<SelectMotorcycle
+							editMode={true}
 							data={data}
 							label="Motor"
-							placeholder="Pilih motor"
+							placeholder={detail?.data?.motor_detail?.nama}
 							onSelect={(value) => setFieldValue('motor_detail', value)}
 						/>
 						<Input

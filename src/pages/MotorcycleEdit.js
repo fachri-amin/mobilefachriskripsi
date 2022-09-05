@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, ActivityIndicator } from 'react-native'
 import { useStoreActions } from 'easy-peasy'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
@@ -58,6 +58,14 @@ const MotorcycleEdit = ({ navigation, route }) => {
 		}
 	}, [data])
 
+	if (isLoadingDetail) {
+		return (
+			<View style={{ flex: 1, marginTop: 50 }}>
+				<ActivityIndicator size="large" color={bgColor.secondary} />
+			</View>
+		)
+	}
+
 	return (
 		<DashboardLayout title={'Ubah sepeda motor'}>
 			<Formik
@@ -104,21 +112,24 @@ const MotorcycleEdit = ({ navigation, route }) => {
 							textError={errors.jumlah_silinder}
 						/>
 						<Select
+							editMode={true}
 							data={merkOptions}
 							label="Merk"
-							placeholder="Pilih merk"
+							placeholder={values.merk?.replace('_', ' ')}
 							onSelect={(value) => setFieldValue('merk', value)}
 						/>
 						<Select
+							editMode={true}
 							data={transmisiOptions}
 							label="Transmisi"
-							placeholder="Pilih transmisi"
+							placeholder={values.transmisi?.replace('_', ' ')}
 							onSelect={(value) => setFieldValue('transmisi', value)}
 						/>
 						<Select
+							editMode={true}
 							data={jenisOptions}
 							label="Jenis"
-							placeholder="Pilih jenis"
+							placeholder={values.jenis?.replace('_', ' ')}
 							onSelect={(value) => setFieldValue('jenis', value)}
 						/>
 						<Gap size={8} />

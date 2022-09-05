@@ -53,7 +53,8 @@ const DashboardLayout = ({ children, title, isLoading }) => {
 					action={{
 						label: 'x',
 						onPress: () => {
-							// Do something
+							setOpenErrorToast(false)
+							setErrorToast(null)
 						},
 					}}
 				>

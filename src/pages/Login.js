@@ -11,6 +11,7 @@ import { setAuthHeader } from '../services/axios'
 import { useStoreActions } from 'easy-peasy'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Yup from 'yup'
+import TextError from '../components/TextError'
 
 const LoginSchemaValidation = Yup.object().shape({
 	username: Yup.string().required('Username Wajib diisi'),
@@ -56,15 +57,21 @@ const Login = ({ navigation }) => {
 								value={values.username}
 								onChange={(value) => setFieldValue('username', value)}
 								onBlur={handleBlur}
+								error={touched.username && errors.username}
+								textError={errors.username}
 							/>
 							<Input
 								label="Password"
 								value={values.password}
 								onChange={(value) => setFieldValue('password', value)}
 								onBlur={handleBlur}
+								isPassword={true}
+								error={touched.password && errors.password}
+								textError={errors.password}
 							/>
 							<Gap size={16} />
-							<SubmitButton text="Masuk" loading={false} onPress={handleSubmit} />
+							<SubmitButton text="Masuk" loading={isLoading} onPress={handleSubmit} />
+							{error && <TextError text={error} />}
 						</View>
 					)}
 				</Formik>

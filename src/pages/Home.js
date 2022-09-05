@@ -13,7 +13,7 @@ import Dialog from '../components/Dialog'
 import { usePrediction } from '../hooks'
 
 const SchemaValidation = Yup.object().shape({
-	volume_silinder: Yup.string().required('Username Wajib diisi'),
+	volume_silinder: Yup.number().integer().required('Volume silinder wajib diisi'),
 	jumlah_silinder: Yup.string().required('Jumlah silinder di isi'),
 	tahun: Yup.string().required('Tahun wajib di isi'),
 	harga_baru: Yup.string().required('Harga baru wajib di isi'),
@@ -55,31 +55,46 @@ const Home = ({ navigation }) => {
 	return (
 		<DashboardLayout title={'Prediksi harga'}>
 			<Formik validationSchema={SchemaValidation} initialValues={FormInitialValue} onSubmit={handleFormSubmit}>
-				{({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue }) => (
+				{({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue, touched, setFieldTouched }) => (
 					<>
 						<Input
 							label="Volume Silinder"
 							value={values.volume_silinder}
-							onChange={(value) => setFieldValue('volume_silinder', value)}
+							onChange={(value) => {
+								setFieldValue('volume_silinder', value)
+								setFieldTouched('volume_silinder', true)
+							}}
 							onBlur={handleBlur}
+							error={touched.volume_silinder && errors.volume_silinder}
+							textError={errors.volume_silinder}
+							isNumber={true}
 						/>
 						<Input
 							label="Jumlah Silinder"
 							value={values.jumlah_silinder}
 							onChange={(value) => setFieldValue('jumlah_silinder', value)}
 							onBlur={handleBlur}
+							isNumber={true}
+							error={touched.jumlah_silinder && errors.jumlah_silinder}
+							textError={errors.jumlah_silinder}
 						/>
 						<Input
 							label="Tahun"
 							value={values.tahun}
 							onChange={(value) => setFieldValue('tahun', value)}
 							onBlur={handleBlur}
+							isNumber={true}
+							error={touched.tahun && errors.tahun}
+							textError={errors.tahun}
 						/>
 						<Input
 							label="Harga Baru"
 							value={values.harga_baru}
 							onChange={(value) => setFieldValue('harga_baru', value)}
 							onBlur={handleBlur}
+							isNumber={true}
+							error={touched.harga_baru && errors.harga_baru}
+							textError={errors.harga_baru}
 						/>
 						<Select
 							data={merkOptions}

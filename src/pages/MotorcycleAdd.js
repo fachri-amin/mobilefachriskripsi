@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { Text } from 'react-native-paper'
+import { useStoreActions } from 'easy-peasy'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { useAddMotorcycle } from '../hooks'
@@ -31,16 +31,18 @@ const FormInitialValue = {
 
 const MotorcycleAdd = ({ navigation }) => {
 	const { mutate, isLoading } = useAddMotorcycle()
+	const setSuccessToast = useStoreActions((actions) => actions.setSuccessToast)
+	const setErrorToast = useStoreActions((actions) => actions.setErrorToast)
 
 	const handleFormSubmit = (formValue) => {
 		mutate(formValue, {
 			onSuccess: (res) => {
-				// setSuccessToast(res.message);
+				setSuccessToast(res.message)
 				navigation.navigate('Motorcycle')
 			},
 			onError: (err) => {
 				console.log(err?.response?.data?.message)
-				// setErrorToast(err?.response?.data?.message);
+				setErrorToast(err?.response?.data?.message)
 			},
 		})
 	}
@@ -48,31 +50,51 @@ const MotorcycleAdd = ({ navigation }) => {
 	return (
 		<DashboardLayout title={'Tambah sepeda motor'}>
 			<Formik initialValues={FormInitialValue} validationSchema={SchemaValidation} onSubmit={handleFormSubmit}>
-				{({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue }) => (
+				{({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue, touched, setFieldTouched }) => (
 					<>
 						<Input
 							label="Nama"
 							value={values.nama}
-							onChange={(value) => setFieldValue('nama', value)}
+							onChange={(value) => {
+								setFieldValue('nama', value)
+								setFieldTouched('nama', true)
+							}}
 							onBlur={handleBlur}
+							error={touched.nama && errors.nama}
+							textError={errors.nama}
 						/>
 						<Input
 							label="Volume Silinder"
 							value={values.volume_silinder}
-							onChange={(value) => setFieldValue('volume_silinder', value)}
+							onChange={(value) => {
+								setFieldValue('volume_silinder', value)
+								setFieldTouched('volume_silinder', true)
+							}}
 							onBlur={handleBlur}
+							isNumber={true}
+							error={touched.volume_silinder && errors.volume_silinder}
+							textError={errors.volume_silinder}
 						/>
 						<Input
 							label="Jumlah Silinder"
 							value={values.jumlah_silinder}
-							onChange={(value) => setFieldValue('jumlah_silinder', value)}
+							onChange={(value) => {
+								setFieldValue('jumlah_silinder', value)
+								setFieldTouched('jumlah_silinder', true)
+							}}
 							onBlur={handleBlur}
+							isNumber={true}
+							error={touched.jumlah_silinder && errors.jumlah_silinder}
+							textError={errors.jumlah_silinder}
 						/>
 						<Select
 							data={merkOptions}
 							label="Merk"
 							placeholder="Pilih merk"
-							onSelect={(value) => setFieldValue('merk', value)}
+							onSelect={(value) => {
+								setFieldValue('merk', value)
+								setFieldTouched('merk', true)
+							}}
 						/>
 						<Select
 							data={transmisiOptions}

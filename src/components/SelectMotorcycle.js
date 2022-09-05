@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from 'react-native'
 import { Dropdown } from 'react-native-element-dropdown'
 import { bgColor } from '../constants'
 
-const Select = ({ label = 'Label', data = [], placeholder = 'Select item', onSelect = () => {} }) => {
+const SelectMotorcycle = ({ label = 'Label', data = [], placeholder = 'Select item', onSelect = () => {} }) => {
 	const [value, setValue] = useState(null)
 	const [isFocus, setIsFocus] = useState(false)
 	const [motorcycleOptions, setMotorcycleOptions] = useState([])
@@ -53,7 +53,7 @@ const Select = ({ label = 'Label', data = [], placeholder = 'Select item', onSel
 				iconStyle={styles.iconStyle}
 				data={motorcycleOptions}
 				maxHeight={300}
-				labelField={label}
+				labelField={'label'}
 				valueField="value"
 				placeholder={!isFocus ? placeholder : '...'}
 				searchPlaceholder="Search..."
@@ -70,7 +70,7 @@ const Select = ({ label = 'Label', data = [], placeholder = 'Select item', onSel
 	)
 }
 
-export default Select
+export default SelectMotorcycle
 
 const styles = StyleSheet.create({
 	container: {

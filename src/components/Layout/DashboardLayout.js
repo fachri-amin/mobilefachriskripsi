@@ -1,12 +1,64 @@
 import React from 'react'
 import { View, StyleSheet, ScrollView } from 'react-native'
-import { Text } from 'react-native-paper'
+import { Text, Snackbar } from 'react-native-paper'
+import { useStoreActions, useStoreState } from 'easy-peasy'
 import { bgColor } from '../../constants'
 
 const DashboardLayout = ({ children, title }) => {
+	const successToast = useStoreState((state) => state.successToast)
+	const setSuccessToast = useStoreActions((actions) => actions.setSuccessToast)
+	const errorToast = useStoreState((state) => state.errorToast)
+	const setErrorToast = useStoreActions((actions) => actions.setErrorToast)
+	const [openSuccessToast, setOpenSuccessToast] = React.useState(false)
+	const [openErrorToast, setOpenErrorToast] = React.useState(false)
+
+	React.useEffect(() => {
+		if (successToast) {
+			setOpenSuccessToast(true)
+
+			setTimeout(() => {
+				setOpenSuccessToast(false)
+				setSuccessToast(null)
+			}, 3000)
+		}
+	}, [successToast])
+
+	React.useEffect(() => {
+		if (errorToast) {
+			setOpenErrorToast(true)
+
+			setTimeout(() => {
+				setOpenErrorToast(false)
+				setErrorToast(null)
+			}, 3000)
+		}
+	}, [errorToast])
+
 	return (
-		<ScrollView>
+		<ScrollView style={{ flex: 1 }}>
 			<View style={styles.pages}>
+				<Snackbar
+					style={{
+						zIndex: 999,
+						width: '100%',
+						position: 'absolute',
+						bottom: 0,
+						backgroundColor: errorToast ? 'red' : 'black',
+					}}
+					visible={openErrorToast || openSuccessToast}
+					onDismiss={() => {
+						setOpenErrorToast(false)
+						setErrorToast(null)
+					}}
+					action={{
+						label: 'x',
+						onPress: () => {
+							// Do something
+						},
+					}}
+				>
+					{errorToast ? errorToast : successToast}
+				</Snackbar>
 				<View style={styles.contentContainer}>
 					<Text style={styles.title}>{title}</Text>
 					{children}

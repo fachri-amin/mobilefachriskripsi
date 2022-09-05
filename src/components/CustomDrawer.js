@@ -6,11 +6,37 @@ import { faHome } from '@fortawesome/free-solid-svg-icons/faHome'
 import { faMotorcycle } from '@fortawesome/free-solid-svg-icons/faMotorcycle'
 import { faDollar } from '@fortawesome/free-solid-svg-icons/faDollar'
 import { faSignOut } from '@fortawesome/free-solid-svg-icons/faSignOut'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { bgColor } from '../constants'
+import { useStoreActions, useStoreState } from 'easy-peasy'
+import DialogConfirmation from './DialogConfirmation'
 
 const CustomDrawer = (props) => {
+	const [visibleDialog, setVisibleDialog] = React.useState(false)
+	const logout = useStoreActions((actions) => actions.logout)
+
+	const openDeleteDialog = (id) => {
+		setVisibleDialog(true)
+	}
+
+	const closeDeleteDialog = () => {
+		setVisibleDialog(false)
+	}
+
+	const handleLogout = () => {
+		logout()
+		props.navigation.navigate('Login')
+	}
+
 	return (
 		<DrawerContentScrollView {...props} style={styles.container}>
+			<DialogConfirmation
+				visible={visibleDialog}
+				onAccept={handleLogout}
+				onReject={closeDeleteDialog}
+				title={'Konfirmasi'}
+				body={'Yakin ingin logout?'}
+			/>
 			<View style={styles.logoContainer}>
 				<Text style={styles.textLogo}>Dzakir Motor</Text>
 			</View>
@@ -35,7 +61,7 @@ const CustomDrawer = (props) => {
 				<FontAwesomeIcon icon={faMotorcycle} color={bgColor.grey2} />
 				<Text style={{ marginLeft: 5 }}>Sepeda Motor</Text>
 			</TouchableOpacity>
-			<TouchableOpacity style={styles.item} onPress={() => props.navigation.navigate('Login')}>
+			<TouchableOpacity style={styles.item} onPress={openDeleteDialog}>
 				<FontAwesomeIcon icon={faSignOut} color={bgColor.grey2} />
 				<Text style={{ marginLeft: 5 }}>Logout</Text>
 			</TouchableOpacity>

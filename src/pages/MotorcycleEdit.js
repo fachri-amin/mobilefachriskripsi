@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { Text } from 'react-native-paper'
+import { useStoreActions } from 'easy-peasy'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { bgColor, transmisiOptions, merkOptions, jenisOptions } from '../constants'
@@ -34,16 +34,18 @@ const MotorcycleEdit = ({ navigation, route }) => {
 	const { mutate, isLoading } = useEditMotorcycle(route.params.id)
 	const { data, isLoading: isLoadingDetail } = useDetailMotorcycle(route.params.id)
 	const formikRef = React.useRef(null)
+	const setSuccessToast = useStoreActions((actions) => actions.setSuccessToast)
+	const setErrorToast = useStoreActions((actions) => actions.setErrorToast)
 
 	const handleFormSubmit = (formValue) => {
 		mutate(formValue, {
 			onSuccess: (res) => {
-				// setSuccessToast(res.message);
+				setSuccessToast(res.message)
 				navigation.navigate('Motorcycle')
 			},
 			onError: (err) => {
 				console.log(err?.response?.data?.message)
-				// setErrorToast(err?.response?.data?.message);
+				setErrorToast(err?.response?.data?.message)
 			},
 		})
 	}
@@ -53,7 +55,6 @@ const MotorcycleEdit = ({ navigation, route }) => {
 			Object.keys(FormInitialValue).forEach((key) => {
 				formikRef.current?.setFieldValue(key, `${data?.data?.[key]}`)
 			})
-			console.log(formikRef?.current?.values)
 		}
 	}, [data])
 
@@ -65,25 +66,42 @@ const MotorcycleEdit = ({ navigation, route }) => {
 				validationSchema={SchemaValidation}
 				onSubmit={handleFormSubmit}
 			>
-				{({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue }) => (
+				{({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue, touched, setFieldTouched }) => (
 					<>
 						<Input
 							label="Nama"
 							value={values.nama}
-							onChange={(value) => setFieldValue('nama', value)}
+							onChange={(value) => {
+								setFieldValue('nama', value)
+								setFieldTouched('nama', true)
+							}}
 							onBlur={handleBlur}
+							error={touched.nama && errors.nama}
+							textError={errors.nama}
 						/>
 						<Input
 							label="Volume Silinder"
 							value={values.volume_silinder}
-							onChange={(value) => setFieldValue('volume_silinder', value)}
+							onChange={(value) => {
+								setFieldValue('volume_silinder', value)
+								setFieldTouched('volume_silinder', true)
+							}}
 							onBlur={handleBlur}
+							isNumber={true}
+							error={touched.volume_silinder && errors.volume_silinder}
+							textError={errors.volume_silinder}
 						/>
 						<Input
 							label="Jumlah Silinder"
 							value={values.jumlah_silinder}
-							onChange={(value) => setFieldValue('jumlah_silinder', value)}
+							onChange={(value) => {
+								setFieldValue('jumlah_silinder', value)
+								setFieldTouched('jumlah_silinder', true)
+							}}
 							onBlur={handleBlur}
+							isNumber={true}
+							error={touched.jumlah_silinder && errors.jumlah_silinder}
+							textError={errors.jumlah_silinder}
 						/>
 						<Select
 							data={merkOptions}
@@ -104,7 +122,7 @@ const MotorcycleEdit = ({ navigation, route }) => {
 							onSelect={(value) => setFieldValue('jenis', value)}
 						/>
 						<Gap size={8} />
-						<SubmitButton text="Tambah" disabled={isLoading} loading={isLoading} onPress={handleSubmit} />
+						<SubmitButton text="Ubah" disabled={isLoading} loading={isLoading} onPress={handleSubmit} />
 					</>
 				)}
 			</Formik>

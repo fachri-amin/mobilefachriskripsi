@@ -37,7 +37,7 @@ const Select = ({ label = 'Label', data = [], placeholder = 'Select item', onSel
 				iconStyle={styles.iconStyle}
 				data={data}
 				maxHeight={300}
-				labelField={label}
+				labelField="label"
 				valueField="value"
 				placeholder={!isFocus ? placeholder : '...'}
 				searchPlaceholder="Search..."
@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
 		borderRadius: 4,
 		paddingHorizontal: 12,
 		backgroundColor: '#F5F5F5',
+		color: 'black',
 	},
 	icon: {
 		marginRight: 5,

@@ -2,11 +2,17 @@ import React from 'react'
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native'
 import { bgColor } from '../constants'
 
-const SubmitButton = ({ onPress, text, type, loading = false, disabled = false }) => {
+const SubmitButton = ({ onPress, text, type, small, loading = false, disabled = false }) => {
+	const padding = small ? 8 : 16
+
 	return (
 		<TouchableOpacity
 			onPress={!disabled ? onPress : () => {}}
-			style={type === 'secondary' ? styles.secondaryContainer : styles.primaryContainer}
+			style={
+				type === 'secondary'
+					? { ...styles.secondaryContainer, paddingVertical: padding }
+					: { ...styles.primaryContainer, paddingVertical: padding }
+			}
 		>
 			{loading && <ActivityIndicator size="small" color={bgColor.grey2} />}
 			{!loading && <Text style={styles.title}>{text}</Text>}
@@ -23,7 +29,7 @@ const styles = StyleSheet.create({
 	},
 	secondaryContainer: {
 		minWidth: '100%',
-		padding: 8,
+		padding: 16,
 		borderRadius: 4,
 		backgroundColor: bgColor.secondary,
 	},

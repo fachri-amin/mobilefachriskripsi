@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
+import { useStoreActions } from 'easy-peasy'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { bgColor } from '../constants'
@@ -27,11 +28,13 @@ const FormInitialValue = {
 const SalesAdd = ({ navigation }) => {
 	const { mutate, isLoading } = useAddSale()
 	const { data, filter, filterMotorcycles } = useMotorcycleOptions()
+	const setSuccessToast = useStoreActions((actions) => actions.setSuccessToast)
+	const setErrorToast = useStoreActions((actions) => actions.setErrorToast)
 
 	const handleFormSubmit = (formValue) => {
 		mutate(formValue, {
 			onSuccess: (res) => {
-				// setSuccessToast(res.message)
+				setSuccessToast(res.message)
 				navigation.navigate('Sales')
 			},
 			onError: (err) => {
@@ -44,7 +47,7 @@ const SalesAdd = ({ navigation }) => {
 	return (
 		<DashboardLayout title={'Tambah penjualan'}>
 			<Formik initialValues={FormInitialValue} validationSchema={SchemaValidation} onSubmit={handleFormSubmit}>
-				{({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue }) => (
+				{({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue, touched, setFieldTouched }) => (
 					<>
 						<SelectMotorcycle
 							data={data}
@@ -55,20 +58,38 @@ const SalesAdd = ({ navigation }) => {
 						<Input
 							label="Tahun"
 							value={values.tahun}
-							onChange={(value) => setFieldValue('tahun', value)}
+							onChange={(value) => {
+								setFieldValue('tahun', value)
+								setFieldTouched('tahun', true)
+							}}
 							onBlur={handleBlur}
+							isNumber={true}
+							error={touched.tahun && errors.tahun}
+							textError={errors.tahun}
 						/>
 						<Input
 							label="Harga Baru"
 							value={values.harga_baru}
-							onChange={(value) => setFieldValue('harga_baru', value)}
+							onChange={(value) => {
+								setFieldValue('harga_baru', value)
+								setFieldTouched('harga_baru', true)
+							}}
 							onBlur={handleBlur}
+							isNumber={true}
+							error={touched.harga_baru && errors.harga_baru}
+							textError={errors.harga_baru}
 						/>
 						<Input
 							label="Harga Bekas"
 							value={values.harga_bekas}
-							onChange={(value) => setFieldValue('harga_bekas', value)}
+							onChange={(value) => {
+								setFieldValue('harga_bekas', value)
+								setFieldTouched('harga_bekas', true)
+							}}
 							onBlur={handleBlur}
+							isNumber={true}
+							error={touched.harga_bekas && errors.harga_bekas}
+							textError={errors.harga_bekas}
 						/>
 						<Gap size={8} />
 						<SubmitButton text="Tambah" disabled={isLoading} loading={isLoading} onPress={handleSubmit} />

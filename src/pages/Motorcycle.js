@@ -1,15 +1,11 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { Text } from 'react-native-paper'
-import {
-	useMotorcycle,
-	useDeleteMotorcycle,
-	useIncreaseStokMotorcycle,
-	useDecreaseStokMotorcycle,
-} from '../hooks/Motorcycle'
+import { useStoreActions } from 'easy-peasy'
+import { useMotorcycle, useDeleteMotorcycle } from '../hooks/Motorcycle'
 import { bgColor } from '../constants'
 import DashboardLayout from '../components/Layout/DashboardLayout'
 import Table from '../components/Table'
+import DialogConfirmation from '../components/DialogConfirmation'
 
 const columns = [
 	{
@@ -48,6 +44,37 @@ const columns = [
 
 const Motorcycle = ({ navigation }) => {
 	const { data, isLoading, filter, filterMotorcycles } = useMotorcycle()
+	const { mutate: deleteMotorcycle, isLoading: loadingDelete } = useDeleteMotorcycle()
+	const [visibleDeleteDialog, setVisibleDeleteDialog] = React.useState(false)
+	const [deleteId, setDeleteId] = React.useState(null)
+	const setSuccessToast = useStoreActions((actions) => actions.setSuccessToast)
+	const setErrorToast = useStoreActions((actions) => actions.setErrorToast)
+
+	const openDeleteDialog = (id) => {
+		setDeleteId(id)
+		setVisibleDeleteDialog(true)
+	}
+
+	const closeDeleteDialog = () => {
+		setDeleteId(null)
+		setVisibleDeleteDialog(false)
+	}
+
+	const handleDelete = () => {
+		deleteMotorcycle(deleteId, {
+			onSuccess: (res) => {
+				setDeleteId(null)
+				setVisibleDeleteDialog(false)
+				setSuccessToast(res.message)
+			},
+			onError: (res) => {
+				console.log(res.message)
+				setDeleteId(null)
+				setVisibleDeleteDialog(false)
+				setErrorToast(err?.response?.data?.message)
+			},
+		})
+	}
 
 	const dataWithIDSerial =
 		data?.data?.results?.map((item, index) => ({
@@ -57,12 +84,21 @@ const Motorcycle = ({ navigation }) => {
 
 	return (
 		<DashboardLayout title={'List sepeda motor'}>
+			<DialogConfirmation
+				isLoading={loadingDelete}
+				visible={visibleDeleteDialog}
+				onAccept={handleDelete}
+				onReject={closeDeleteDialog}
+				title={'Konfirmasi'}
+				body={'Yakin ingin menghapus data ini?'}
+			/>
 			<Table
 				data={dataWithIDSerial}
 				columns={columns}
 				onAddButton={() => navigation.navigate('MotorcycleAdd')}
 				textAddButton={'Tambah Sepeda Motor'}
 				onUpdate={(id) => navigation.navigate('MotorcycleEdit', { id })}
+				onDelete={(id) => openDeleteDialog(id)}
 				width={1200}
 				disabledNext={!data?.data?.next}
 				disabledPrev={!data?.data?.previous}

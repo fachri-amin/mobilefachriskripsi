@@ -1,10 +1,10 @@
 import React from 'react'
-import { View, StyleSheet, ScrollView } from 'react-native'
+import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native'
 import { Text, Snackbar } from 'react-native-paper'
 import { useStoreActions, useStoreState } from 'easy-peasy'
 import { bgColor } from '../../constants'
 
-const DashboardLayout = ({ children, title }) => {
+const DashboardLayout = ({ children, title, isLoading }) => {
 	const successToast = useStoreState((state) => state.successToast)
 	const setSuccessToast = useStoreActions((actions) => actions.setSuccessToast)
 	const errorToast = useStoreState((state) => state.errorToast)
@@ -61,7 +61,12 @@ const DashboardLayout = ({ children, title }) => {
 				</Snackbar>
 				<View style={styles.contentContainer}>
 					<Text style={styles.title}>{title}</Text>
-					{children}
+					{isLoading && (
+						<View style={{ flex: 1 }}>
+							<ActivityIndicator size="large" color={bgColor.secondary} />
+						</View>
+					)}
+					{!isLoading && children}
 				</View>
 			</View>
 		</ScrollView>

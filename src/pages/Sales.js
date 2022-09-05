@@ -79,7 +79,7 @@ const Sales = ({ navigation }) => {
 		})) || []
 
 	return (
-		<DashboardLayout title={'List penjualan'}>
+		<DashboardLayout title={'List penjualan'} isLoading={isLoading}>
 			<DialogConfirmation
 				isLoading={loadingDelete}
 				visible={visibleDeleteDialog}

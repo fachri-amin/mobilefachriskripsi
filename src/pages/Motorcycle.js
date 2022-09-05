@@ -83,7 +83,7 @@ const Motorcycle = ({ navigation }) => {
 		})) || []
 
 	return (
-		<DashboardLayout title={'List sepeda motor'}>
+		<DashboardLayout title={'List sepeda motor'} isLoading={isLoading}>
 			<DialogConfirmation
 				isLoading={loadingDelete}
 				visible={visibleDeleteDialog}
